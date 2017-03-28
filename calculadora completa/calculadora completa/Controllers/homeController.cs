@@ -11,6 +11,8 @@ namespace calculadora_completa.Controllers
         // GET: home
         public ActionResult Index()
         {
+            ViewBag.visor = "0";
+            Session["PrimeiroOperador"] = true;
             return View();
         }
         // POST: home
@@ -32,7 +34,48 @@ namespace calculadora_completa.Controllers
                     if (visor.Equals("0")) visor = bt;
                     else visor += bt;
                     //visor =visor+bt
-                    break;            
+                    break;
+                case ",":
+                    if (!visor.Contains(",")) visor += ",";
+                        break;
+                case "+/-":
+                    // visor = Convert.ToDouble(visor) * -1 + "";
+                    if (visor.StartsWith("-")) visor = visor.Replace("-", "");
+                    else if (!visor.Equals("0")) visor = "-" + visor;
+                    break;
+                case "C":
+                    visor = "0";
+                    Session["PrimeiroOperador"] = true;
+                    break;
+                case "+":
+                case "-":
+                case "x":
+                case ":":
+                    if ((bool)Session["PrimeiroOperador"])
+                    {
+                        //guardar valor do visor
+                        Session["operando"] = visor;
+                        //limpar o visor
+                        visor = "0";
+                        //guardar o operador
+                        Session["operador"] = bt;
+                        //marcar como tendo utilizado o operador
+                        Session["PrimeiroOperador"] = false;
+                    }
+                    else
+                    {
+                        //se nao é a primeira vez que se clica num operador
+                        //vou utilizar os valores anteriores
+                        switch ((string)Session["operador"])
+                        {
+                            //recuperar codigo da primeira calculadora
+                            case "":
+                                break;
+                        }
+                        //guardar os novos valores
+
+                    }
+                    break;
             }
             //entregar os valores a view
             ViewBag.Visor = visor;    
